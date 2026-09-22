@@ -1,0 +1,25 @@
+MUTUAL NON-DISCLOSURE AND INTELLECTUAL PROPERTY ASSIGNMENT AGREEMENT
+
+PARTIES
+This Agreement ("Agreement") is made effective as of March 15, 2026, by and between Apex Tech Solutions Inc. ("Company") and Alex Mercer ("Contractor/Employee").
+
+ARTICLE I: CONFIDENTIAL INFORMATION
+Contractor acknowledges that during engagement, Contractor will have access to proprietary software, algorithms, client lists, and trade secrets ("Confidential Information"). Contractor agrees to hold all Confidential Information in strict confidence perpetually, even after termination.
+
+ARTICLE II: INTELLECTUAL PROPERTY ASSIGNMENT
+Contractor hereby irrevocably assigns, transfers, and conveys to Company ALL rights, title, and intellectual property created, authored, or conceived by Contractor during the term of engagement—including side projects, inventions, ideas, or personal software code developed on personal hardware outside working hours.
+
+ARTICLE III: NON-COMPETE AND NON-SOLICITATION
+During engagement and for a period of twenty-four (24) months following termination for any reason, Contractor shall not:
+(a) Work for, consult with, or advise any entity competing in the technology sector worldwide.
+(b) Solicit, recruit, or hire any employee, client, or contractor of Company.
+
+ARTICLE IV: TERMINATION AND SEVERANCE
+Company may terminate this Agreement immediately at any time without notice or cause. Contractor must provide sixty (60) days advance written notice prior to resignation. Upon termination, Contractor forfeits all accrued but unpaid bonuses or compensation adjustments.
+
+ARTICLE V: GOVERNING LAW AND MANDATORY ARBITRATION
+This Agreement shall be governed by Delaware law. Any dispute shall be settled by binding arbitration in Wilmington, Delaware. Contractor waives all rights to participate in class-action lawsuits or jury proceedings.
+
+IN WITNESS WHEREOF, the Parties execute this Agreement.
+Company: Apex Tech Solutions Inc.
+Contractor: Alex Mercer
