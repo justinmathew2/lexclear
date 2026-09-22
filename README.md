@@ -107,21 +107,22 @@ python -m uvicorn backend.main:app --reload --port 8000
 
 ---
 
-### 3. Frontend Setup (Next.js)
+### 4. Firebase Hosting Deployment
 
-In a new terminal:
+LexClear is pre-configured for Firebase Hosting. To deploy the frontend static build to your Firebase project:
 
 ```bash
+# 1. Build the Next.js static export
 cd frontend
+npm run build
+cd ..
 
-# Install dependencies
-npm install
-
-# Run frontend dev server (Port 3000)
-npm run dev
+# 2. Deploy to Firebase Hosting
+firebase deploy --only hosting
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Your live web app will be available at `https://<your-firebase-project>.web.app`.
+
 
 ---
 

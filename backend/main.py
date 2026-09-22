@@ -4,7 +4,10 @@ import logging
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
+
 
 from backend.config import settings
 from backend.parsers.pdf_parser import parse_pdf
@@ -56,13 +59,14 @@ class CompareRequest(BaseModel):
     doc_b_id: str
     api_key: Optional[str] = None
 
-@app.get("/")
-def read_root():
+@app.get("/api/health")
+def health_check():
     return {
         "status": "online",
         "service": "LexClear AI Legal Document Assistant",
         "disclaimer": "Informational tool only. Not legal advice."
     }
+
 
 @app.get("/api/samples")
 def list_samples():
@@ -205,6 +209,13 @@ def compare_documents(
         logger.error(f"Error comparing documents: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Mount static frontend build if present
+static_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "out")
+if os.path.exists(static_dir):
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=port, reload=True)
+
