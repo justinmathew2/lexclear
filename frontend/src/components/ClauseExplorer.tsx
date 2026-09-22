@@ -52,18 +52,22 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <section aria-label="Clause Explorer Section" className="space-y-6 animate-in fade-in duration-300">
       {/* Category Pills & Search */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+        <div role="tablist" aria-label="Clause categories" className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.key;
             return (
               <button
                 key={cat.key}
+                role="tab"
+                aria-selected={isSelected}
+                aria-controls={`clause-category-panel-${cat.key}`}
+                id={`clause-tab-${cat.key}`}
                 onClick={() => setSelectedCategory(cat.key)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all border ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all border focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                   isSelected
                     ? 'bg-emerald-600 border-emerald-500 text-white shadow-md shadow-emerald-950/50'
                     : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
@@ -77,19 +81,21 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
 
         {/* Search Input */}
         <div className="relative min-w-[220px]">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <label htmlFor="clause-search-input" className="sr-only">Search clauses</label>
+          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <input
+            id="clause-search-input"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search clauses..."
-            className="w-full bg-slate-900/80 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full bg-slate-900/80 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
           />
         </div>
       </div>
 
       {/* Clause Cards List */}
-      <div className="space-y-4">
+      <div role="region" aria-live="polite" className="space-y-4">
         {filteredClauses.length === 0 ? (
           <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 text-center text-xs text-slate-500">
             No clauses found matching your filter criteria.
@@ -109,9 +115,13 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
                 }`}
               >
                 {/* Clause Header Bar */}
-                <div
+                <button
+                  type="button"
+                  aria-expanded={isExpanded}
+                  aria-controls={`clause-body-${idx}`}
+                  id={`clause-header-${idx}`}
                   onClick={() => setExpandedIndex(isExpanded ? null : idx)}
-                  className="p-4 flex items-center justify-between cursor-pointer select-none"
+                  className="w-full p-4 flex items-center justify-between text-left cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <div className="flex items-center gap-3">
                     <span className={`text-[10px] font-mono px-2.5 py-1 rounded-lg border uppercase tracking-wider ${getBadgeStyle(clause.category)}`}>
@@ -129,14 +139,14 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
                     </div>
                   </div>
 
-                  <button className="text-slate-400 hover:text-slate-200 p-1">
-                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </button>
-                </div>
+                  <span className="text-slate-400 hover:text-slate-200 p-1">
+                    {isExpanded ? <ChevronUp className="w-4 h-4" aria-hidden="true" /> : <ChevronDown className="w-4 h-4" aria-hidden="true" />}
+                  </span>
+                </button>
 
                 {/* Expanded Clause Body */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 space-y-4 border-t border-slate-800/60 pt-3 animate-in fade-in duration-200">
+                  <div id={`clause-body-${idx}`} role="region" aria-labelledby={`clause-header-${idx}`} className="px-4 pb-4 space-y-4 border-t border-slate-800/60 pt-3 animate-in fade-in duration-200">
                     {/* Translation */}
                     <div className="space-y-1">
                       <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">
@@ -160,7 +170,7 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
                     {/* Original Legal Excerpt */}
                     <div className="space-y-1">
                       <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <FileCode className="w-3.5 h-3.5 text-slate-500" />
+                        <FileCode className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
                         Original Contract Excerpt
                       </span>
                       <div className="text-xs font-mono text-slate-400 bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 leading-normal max-h-40 overflow-y-auto">
@@ -174,6 +184,6 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
           })
         )}
       </div>
-    </div>
+    </section>
   );
 };

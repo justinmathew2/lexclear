@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Sparkles, ArrowRight, Loader2, FileCode, CheckCircle2, Layers } from 'lucide-react';
+import { Upload, FileText, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import { fetchSamples, uploadDocument, loadSampleDocument } from '@/lib/api';
 import { DEFAULT_SAMPLES } from '@/lib/sampleData';
 import { ParsedDocument, SampleDoc } from '@/types';
@@ -26,7 +26,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   isCompareMode = false,
 }) => {
   const [samples, setSamples] = useState<SampleDoc[]>(DEFAULT_SAMPLES);
-
   const [dragActive, setDragActive] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [targetSlot, setTargetSlot] = useState<'A' | 'B'>('A');
@@ -103,9 +102,11 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <section aria-label="Document Uploader Section" className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
       {/* Upload Zone */}
       <div
+        role="region"
+        aria-label="File dropzone"
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -116,20 +117,23 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
             : 'border-slate-700/80 bg-slate-900/60 hover:border-slate-500 hover:bg-slate-900/80'
         }`}
       >
+        <label htmlFor="file-upload-input" className="sr-only">Choose a legal document PDF or DOCX file to upload</label>
         <input
+          id="file-upload-input"
           type="file"
           accept=".pdf,.docx,.txt"
           onChange={handleFileInput}
           disabled={isLoading}
+          aria-label="Upload PDF or DOCX legal document"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
         />
 
         <div className="flex flex-col items-center justify-center space-y-3">
           <div className="p-4 bg-gradient-to-br from-emerald-500/10 to-teal-500/20 border border-emerald-500/30 rounded-2xl text-emerald-400 shadow-lg shadow-emerald-950/50">
             {isLoading ? (
-              <Loader2 className="w-8 h-8 animate-spin text-emerald-400" />
+              <Loader2 className="w-8 h-8 animate-spin text-emerald-400" aria-hidden="true" />
             ) : (
-              <Upload className="w-8 h-8 text-emerald-400" />
+              <Upload className="w-8 h-8 text-emerald-400" aria-hidden="true" />
             )}
           </div>
 
@@ -151,15 +155,15 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           )}
 
           {isLoading && (
-            <p className="text-xs text-emerald-400 animate-pulse font-medium">{loadingText}</p>
+            <p role="status" aria-live="polite" className="text-xs text-emerald-400 animate-pulse font-medium">{loadingText}</p>
           )}
         </div>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-950/50 border border-rose-500/30 rounded-2xl text-xs text-rose-300 flex items-center justify-between">
+        <div role="alert" className="p-4 bg-rose-950/50 border border-rose-500/30 rounded-2xl text-xs text-rose-300 flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-rose-400 font-bold hover:underline">
+          <button onClick={() => setError(null)} className="text-rose-400 font-bold hover:underline focus:outline-none focus:ring-2 focus:ring-rose-500">
             Dismiss
           </button>
         </div>
@@ -169,7 +173,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       <div className="pt-2">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-emerald-400" aria-hidden="true" />
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
               Or Try a Seeded Sample Document
             </h4>
@@ -179,12 +183,14 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               <span className="text-slate-400 px-1">Loading into:</span>
               <button
                 onClick={() => setTargetSlot('A')}
+                aria-pressed={targetSlot === 'A'}
                 className={`px-2 py-0.5 rounded ${targetSlot === 'A' ? 'bg-emerald-600 text-white font-semibold' : 'text-slate-400'}`}
               >
                 Doc A
               </button>
               <button
                 onClick={() => setTargetSlot('B')}
+                aria-pressed={targetSlot === 'B'}
                 className={`px-2 py-0.5 rounded ${targetSlot === 'B' ? 'bg-emerald-600 text-white font-semibold' : 'text-slate-400'}`}
               >
                 Doc B
@@ -193,17 +199,19 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div role="group" aria-label="Sample document options" className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {samples.map((sample) => (
-            <div
+            <button
               key={sample.key}
+              type="button"
               onClick={() => !isLoading && handleSampleClick(sample.key, targetSlot)}
-              className="group cursor-pointer bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-md hover:shadow-emerald-950/30"
+              aria-label={`Analyze sample document: ${sample.title}`}
+              className="group text-left cursor-pointer bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between space-y-3 shadow-md hover:shadow-emerald-950/30 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-slate-800 rounded-xl text-emerald-400 group-hover:bg-emerald-500/10 transition-colors">
-                    <FileText className="w-5 h-5" />
+                    <FileText className="w-5 h-5" aria-hidden="true" />
                   </div>
                   <div>
                     <h5 className="text-sm font-medium text-slate-100 group-hover:text-emerald-300 transition-colors">
@@ -216,12 +224,12 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               <p className="text-xs text-slate-400 leading-relaxed">{sample.description}</p>
               <div className="flex items-center justify-end text-xs text-emerald-400 font-medium group-hover:translate-x-1 transition-transform">
                 <span>Analyze Sample</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                <ArrowRight className="w-3.5 h-3.5 ml-1" aria-hidden="true" />
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };

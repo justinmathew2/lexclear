@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { RedFlag } from '@/types';
-import { AlertTriangle, ShieldAlert, AlertOctagon, Info, Sparkles, MessageSquare } from 'lucide-react';
+import { AlertTriangle, ShieldAlert, AlertOctagon, Info, Sparkles } from 'lucide-react';
 
 interface RedFlagsRadarProps {
   redFlags: RedFlag[];
@@ -36,22 +36,22 @@ export const RedFlagsRadar: React.FC<RedFlagsRadarProps> = ({ redFlags }) => {
   const mediumCount = redFlags.filter((f) => f.severity.toUpperCase() === 'MEDIUM').length;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <section aria-label="Red Flags & Risk Radar Section" className="space-y-6 animate-in fade-in duration-300">
       {/* Radar Summary Banner */}
       <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400">
-            <AlertOctagon className="w-6 h-6" />
+            <AlertOctagon className="w-6 h-6" aria-hidden="true" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-slate-100">Red Flags & Risk Radar</h3>
+            <h3 className="text-base font-semibold text-slate-100">Red Flags &amp; Risk Radar</h3>
             <p className="text-xs text-slate-400">
               Scanned for unusual, one-sided, or high-risk clauses that could disadvantage you.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" role="group" aria-label="Risk counts summary">
           <span className="px-3 py-1 bg-rose-950/60 border border-rose-500/30 text-rose-300 text-xs font-semibold rounded-xl">
             {highCount} High Risk
           </span>
@@ -62,7 +62,7 @@ export const RedFlagsRadar: React.FC<RedFlagsRadarProps> = ({ redFlags }) => {
       </div>
 
       {/* Red Flag Cards */}
-      <div className="space-y-4">
+      <div role="region" aria-live="polite" className="space-y-4">
         {redFlags.length === 0 ? (
           <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 text-center text-xs text-slate-400">
             No significant red flags detected in this document.
@@ -73,14 +73,15 @@ export const RedFlagsRadar: React.FC<RedFlagsRadarProps> = ({ redFlags }) => {
             const Icon = style.icon;
 
             return (
-              <div
+              <article
                 key={idx}
+                aria-label={`Red flag: ${flag.clause_title}`}
                 className={`border rounded-2xl p-5 space-y-4 transition-all duration-200 shadow-md ${style.cardBorder}`}
               >
                 {/* Title & Severity */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <Icon className="w-5 h-5 shrink-0 text-rose-400" />
+                    <Icon className="w-5 h-5 shrink-0 text-rose-400" aria-hidden="true" />
                     <div>
                       <h4 className="text-sm font-semibold text-slate-100">{flag.clause_title}</h4>
                       {flag.section_reference && (
@@ -107,7 +108,7 @@ export const RedFlagsRadar: React.FC<RedFlagsRadarProps> = ({ redFlags }) => {
                 {/* Negotiation Tip */}
                 <div className="space-y-1">
                   <span className="text-[11px] font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
                     Suggested Negotiation Tip / Counter-Clause
                   </span>
                   <p className="text-xs text-amber-200/90 leading-relaxed bg-amber-950/20 p-3 rounded-xl border border-amber-500/20">
@@ -121,11 +122,11 @@ export const RedFlagsRadar: React.FC<RedFlagsRadarProps> = ({ redFlags }) => {
                     &quot;{flag.original_text}&quot;
                   </div>
                 )}
-              </div>
+              </article>
             );
           })
         )}
       </div>
-    </div>
+    </section>
   );
 };

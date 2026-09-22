@@ -167,105 +167,137 @@ export default function Home() {
               </div>
 
               {/* Navigation Tabs */}
-              <div className="flex items-center gap-1 overflow-x-auto bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800 scrollbar-none">
-                <button
-                  onClick={() => setActiveTab('summary')}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeTab === 'summary'
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>Summary</span>
-                </button>
+              <nav aria-label="Document View Modes">
+                <div role="tablist" aria-label="Document navigation options" className="flex items-center gap-1 overflow-x-auto bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800 scrollbar-none">
+                  <button
+                    role="tab"
+                    id="tab-summary"
+                    aria-selected={activeTab === 'summary'}
+                    aria-controls="tabpanel-summary"
+                    onClick={() => setActiveTab('summary')}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      activeTab === 'summary'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Summary</span>
+                  </button>
 
-                <button
-                  onClick={() => setActiveTab('clauses')}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeTab === 'clauses'
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <Scale className="w-3.5 h-3.5" />
-                  <span>Clauses ({document.analysis.clause_breakdown.length})</span>
-                </button>
+                  <button
+                    role="tab"
+                    id="tab-clauses"
+                    aria-selected={activeTab === 'clauses'}
+                    aria-controls="tabpanel-clauses"
+                    onClick={() => setActiveTab('clauses')}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      activeTab === 'clauses'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <Scale className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Clauses ({document.analysis.clause_breakdown.length})</span>
+                  </button>
 
-                <button
-                  onClick={() => setActiveTab('red_flags')}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeTab === 'red_flags'
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <AlertOctagon className="w-3.5 h-3.5 text-rose-300" />
-                  <span>Red Flags ({document.analysis.red_flags.length})</span>
-                </button>
+                  <button
+                    role="tab"
+                    id="tab-red-flags"
+                    aria-selected={activeTab === 'red_flags'}
+                    aria-controls="tabpanel-red-flags"
+                    onClick={() => setActiveTab('red_flags')}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      activeTab === 'red_flags'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <AlertOctagon className="w-3.5 h-3.5 text-rose-300" aria-hidden="true" />
+                    <span>Red Flags ({document.analysis.red_flags.length})</span>
+                  </button>
 
-                <button
-                  onClick={() => setActiveTab('checklist')}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeTab === 'checklist'
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <HelpCircle className="w-3.5 h-3.5 text-indigo-300" />
-                  <span>Lawyer Prep ({document.analysis.lawyer_checklist.length})</span>
-                </button>
+                  <button
+                    role="tab"
+                    id="tab-checklist"
+                    aria-selected={activeTab === 'checklist'}
+                    aria-controls="tabpanel-checklist"
+                    onClick={() => setActiveTab('checklist')}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      activeTab === 'checklist'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/50'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-indigo-300" aria-hidden="true" />
+                    <span>Lawyer Prep ({document.analysis.lawyer_checklist.length})</span>
+                  </button>
 
-                <button
-                  onClick={handleCompareTabClick}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeTab === 'compare'
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-950/50'
-                      : 'text-purple-400 hover:text-purple-300 bg-purple-950/30 border border-purple-500/20'
-                  }`}
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Compare</span>
-                </button>
-
-              </div>
+                  <button
+                    role="tab"
+                    id="tab-compare"
+                    aria-selected={activeTab === 'compare'}
+                    aria-controls="tabpanel-compare"
+                    onClick={handleCompareTabClick}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 ${
+                      activeTab === 'compare'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-950/50'
+                        : 'text-purple-400 hover:text-purple-300 bg-purple-950/30 border border-purple-500/20'
+                    }`}
+                  >
+                    <Layers className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Compare</span>
+                  </button>
+                </div>
+              </nav>
             </div>
 
             {/* Active View Tab Panel */}
             <div className="min-h-[500px]">
               {activeTab === 'summary' && (
-                <SummaryView
-                  summary={document.analysis.summary}
-                  title={document.title}
-                  wordCount={document.word_count}
-                  clauseCount={document.clause_count}
-                />
+                <div role="tabpanel" id="tabpanel-summary" aria-labelledby="tab-summary">
+                  <SummaryView
+                    summary={document.analysis.summary}
+                    title={document.title}
+                    wordCount={document.word_count}
+                    clauseCount={document.clause_count}
+                  />
+                </div>
               )}
 
               {activeTab === 'clauses' && (
-                <ClauseExplorer
-                  clauses={document.analysis.clause_breakdown}
-                  highlightedClauseRef={highlightedClauseRef}
-                />
+                <div role="tabpanel" id="tabpanel-clauses" aria-labelledby="tab-clauses">
+                  <ClauseExplorer
+                    clauses={document.analysis.clause_breakdown}
+                    highlightedClauseRef={highlightedClauseRef}
+                  />
+                </div>
               )}
 
               {activeTab === 'red_flags' && (
-                <RedFlagsRadar redFlags={document.analysis.red_flags} />
+                <div role="tabpanel" id="tabpanel-red-flags" aria-labelledby="tab-red-flags">
+                  <RedFlagsRadar redFlags={document.analysis.red_flags} />
+                </div>
               )}
 
               {activeTab === 'checklist' && (
-                <LawyerChecklist questions={document.analysis.lawyer_checklist} />
+                <div role="tabpanel" id="tabpanel-checklist" aria-labelledby="tab-checklist">
+                  <LawyerChecklist questions={document.analysis.lawyer_checklist} />
+                </div>
               )}
 
               {activeTab === 'compare' && secondDocument && (
-                <DocumentCompare
-                  docAId={document.doc_id}
-                  docBId={secondDocument.doc_id}
-                  docATitle={document.title}
-                  docBTitle={secondDocument.title}
-                />
+                <div role="tabpanel" id="tabpanel-compare" aria-labelledby="tab-compare">
+                  <DocumentCompare
+                    docAId={document.doc_id}
+                    docBId={secondDocument.doc_id}
+                    docATitle={document.title}
+                    docBTitle={secondDocument.title}
+                  />
+                </div>
               )}
             </div>
+
           </div>
         )}
       </main>
