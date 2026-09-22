@@ -1,6 +1,7 @@
 import { ParsedDocument, SampleDoc } from '@/types';
 
-export className DEFAULT_SAMPLES: SampleDoc[] = [
+export const DEFAULT_SAMPLES: SampleDoc[] = [
+
   {
     key: "residential_lease",
     title: "🏡 Residential Lease Agreement",
