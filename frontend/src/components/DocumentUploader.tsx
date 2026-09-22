@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, FileText, Sparkles, ArrowRight, Loader2, FileCode, CheckCircle2, Layers } from 'lucide-react';
 import { fetchSamples, uploadDocument, loadSampleDocument } from '@/lib/api';
+import { DEFAULT_SAMPLES } from '@/lib/sampleData';
 import { ParsedDocument, SampleDoc } from '@/types';
 
 interface DocumentUploaderProps {
@@ -24,7 +25,8 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   setError,
   isCompareMode = false,
 }) => {
-  const [samples, setSamples] = useState<SampleDoc[]>([]);
+  const [samples, setSamples] = useState<SampleDoc[]>(DEFAULT_SAMPLES);
+
   const [dragActive, setDragActive] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [targetSlot, setTargetSlot] = useState<'A' | 'B'>('A');

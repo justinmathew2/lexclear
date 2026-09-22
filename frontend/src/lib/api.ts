@@ -1,4 +1,5 @@
 import { ParsedDocument, SampleDoc, ComparisonResult } from '@/types';
+import { DEFAULT_SAMPLES, SAMPLE_LEASE_PARSED, SAMPLE_NDA_PARSED } from '@/lib/sampleData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL !== undefined ? process.env.NEXT_PUBLIC_API_URL : '';
 
@@ -13,11 +14,16 @@ function getApiKeyHeader(apiKey?: string): Record<string, string> {
 }
 
 export async function fetchSamples(): Promise<SampleDoc[]> {
-  const res = await fetch(`${API_BASE_URL}/api/samples`);
-  if (!res.ok) {
-    throw new Error('Failed to fetch sample documents list');
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/samples`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
+  } catch (err) {
+    console.warn('API samples fetch failed, using default client sample list', err);
   }
-  return res.json();
+  return DEFAULT_SAMPLES;
 }
 
 export async function uploadDocument(file: File, apiKey?: string): Promise<ParsedDocument> {
@@ -39,18 +45,26 @@ export async function uploadDocument(file: File, apiKey?: string): Promise<Parse
 }
 
 export async function loadSampleDocument(sampleKey: string, apiKey?: string): Promise<ParsedDocument> {
-  const res = await fetch(`${API_BASE_URL}/api/load-sample/${sampleKey}`, {
-    method: 'POST',
-    headers: getApiKeyHeader(apiKey),
-  });
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/load-sample/${sampleKey}`, {
+      method: 'POST',
+      headers: getApiKeyHeader(apiKey),
+    });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: 'Sample load failed' }));
-    throw new Error(err.detail || 'Failed to load sample document');
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('API load-sample failed, using client fallback dataset', err);
   }
 
-  return res.json();
+  // Fallback to client sample dataset
+  if (sampleKey === 'employment_nda') {
+    return SAMPLE_NDA_PARSED;
+  }
+  return SAMPLE_LEASE_PARSED;
 }
+
 
 export async function sendChatMessage(docId: string, query: string, apiKey?: string) {
   const res = await fetch(`${API_BASE_URL}/api/chat`, {
