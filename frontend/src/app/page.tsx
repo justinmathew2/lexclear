@@ -11,6 +11,7 @@ import { LawyerChecklist } from '@/components/LawyerChecklist';
 import { DocumentCompare } from '@/components/DocumentCompare';
 import { RagChat } from '@/components/RagChat';
 import { ParsedDocument } from '@/types';
+import { SAMPLE_NDA_PARSED } from '@/lib/sampleData';
 import {
   Scale,
   FileText,
@@ -43,6 +44,14 @@ export default function Home() {
     setSecondDocument(doc);
     setActiveTab('compare');
   };
+
+  const handleCompareTabClick = () => {
+    if (!secondDocument) {
+      setSecondDocument(SAMPLE_NDA_PARSED);
+    }
+    setActiveTab('compare');
+  };
+
 
   const handleCitationClick = (sectionRef: string) => {
     setActiveTab('clauses');
@@ -207,19 +216,18 @@ export default function Home() {
                   <span>Lawyer Prep ({document.analysis.lawyer_checklist.length})</span>
                 </button>
 
-                {secondDocument && (
-                  <button
-                    onClick={() => setActiveTab('compare')}
-                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                      activeTab === 'compare'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-950/50'
-                        : 'text-purple-400 hover:text-purple-300'
-                    }`}
-                  >
-                    <Layers className="w-3.5 h-3.5" />
-                    <span>Compare</span>
-                  </button>
-                )}
+                <button
+                  onClick={handleCompareTabClick}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                    activeTab === 'compare'
+                      ? 'bg-purple-600 text-white shadow-md shadow-purple-950/50'
+                      : 'text-purple-400 hover:text-purple-300 bg-purple-950/30 border border-purple-500/20'
+                  }`}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>Compare</span>
+                </button>
+
               </div>
             </div>
 
