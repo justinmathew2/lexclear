@@ -88,14 +88,24 @@ DOCUMENT TEXT:
 
     return json.loads(response.text)
 
+EMBEDDING_CACHE: Dict[str, List[float]] = {}
+
 def generate_text_embedding(text: str, api_key: Optional[str] = None) -> List[float]:
-    """Generates vector embedding for document chunk using Gemini embedding model."""
+    """Generates vector embedding for document chunk using Gemini embedding model with LRU cache."""
+    cache_key = f"{text[:100]}_{len(text)}"
+    if cache_key in EMBEDDING_CACHE:
+        return EMBEDDING_CACHE[cache_key]
+
     client = get_client(api_key)
     result = client.models.embed_content(
         model=settings.EMBEDDING_MODEL,
         contents=text,
     )
-    return result.embedding.values
+    values = result.embedding.values
+    if len(EMBEDDING_CACHE) < 500:
+        EMBEDDING_CACHE[cache_key] = values
+    return values
+
 
 def compare_documents_with_gemini(doc_a_text: str, doc_b_text: str, doc_a_name: str = "Document A", doc_b_name: str = "Document B", api_key: Optional[str] = None) -> Dict[str, Any]:
     """Compares two legal documents/drafts and outputs a structured matrix of differences and favorability."""

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { ClauseItem } from '@/types';
+
 import { Search, ChevronDown, ChevronUp, FileCode, CheckCircle2, Clock, CreditCard, XCircle, AlertOctagon, RefreshCw } from 'lucide-react';
 
 interface ClauseExplorerProps {
@@ -24,15 +25,21 @@ export const ClauseExplorer: React.FC<ClauseExplorerProps> = ({ clauses, highlig
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
-  const filteredClauses = clauses.filter((c) => {
-    const matchesCategory = selectedCategory === 'ALL' || c.category.toUpperCase() === selectedCategory;
-    const matchesSearch =
-      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.plain_english_translation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.original_excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.section_reference.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredClauses = useMemo(() => {
+    const queryLower = searchQuery.toLowerCase();
+    return clauses.filter((c) => {
+      const matchesCategory = selectedCategory === 'ALL' || c.category.toUpperCase() === selectedCategory;
+      if (!matchesCategory) return false;
+      if (!queryLower) return true;
+      return (
+        c.title.toLowerCase().includes(queryLower) ||
+        c.plain_english_translation.toLowerCase().includes(queryLower) ||
+        c.original_excerpt.toLowerCase().includes(queryLower) ||
+        c.section_reference.toLowerCase().includes(queryLower)
+      );
+    });
+  }, [clauses, selectedCategory, searchQuery]);
+
 
   const getBadgeStyle = (category: string) => {
     switch (category.toUpperCase()) {

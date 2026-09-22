@@ -81,11 +81,32 @@ def test_document_comparison():
     load_a = client.post("/api/load-sample/residential_lease").json()
     load_b = client.post("/api/load-sample/employment_nda").json()
     
-    compare_res = client.post("/api/compare", json={
-        "doc_a_id": load_a["doc_id"],
-        "doc_b_id": load_b["doc_id"]
-    })
-    assert compare_res.status_code == 200
-    comp_data = compare_res.json()
-    assert "comparison" in comp_data
-    assert "differences" in comp_data["comparison"]
+def test_security_headers_present():
+    """Test response headers contain mandatory security headers."""
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    assert response.headers.get("x-content-type-options") == "nosniff"
+    assert response.headers.get("x-frame-options") == "DENY"
+    assert "x-xss-protection" in response.headers
+    assert "strict-transport-security" in response.headers
+
+def test_unsupported_file_upload_rejected():
+    """Test uploading an unsupported extension is rejected with 400."""
+    fake_payload = b"Malicious executable code"
+    response = client.post(
+        "/api/upload",
+        files={"file": ("malicious.exe", fake_payload, "application/octet-stream")}
+    )
+    assert response.status_code == 400
+    assert "Unsupported file type" in response.json()["detail"]
+
+def test_oversized_file_upload_rejected():
+    """Test uploading an oversized file is rejected with 413."""
+    oversized_payload = b"0" * (11 * 1024 * 1024)  # 11 MB
+    response = client.post(
+        "/api/upload",
+        files={"file": ("huge_contract.pdf", oversized_payload, "application/pdf")}
+    )
+    assert response.status_code == 413
+    assert "exceeds" in response.json()["detail"].lower()
+

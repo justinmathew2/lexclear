@@ -1,5 +1,6 @@
 import re
-from typing import List, Dict, Any
+from functools import lru_cache
+from typing import List, Dict, Any, Tuple
 from pydantic import BaseModel
 
 class ClauseChunk(BaseModel):
@@ -15,6 +16,7 @@ def chunk_legal_document(raw_text: str) -> List[ClauseChunk]:
     Splits a legal document into logical clauses based on legal section headings,
     articles, numbered clauses, and structural breaks.
     """
+
     if not raw_text or not raw_text.strip():
         return []
 

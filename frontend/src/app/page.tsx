@@ -118,7 +118,8 @@ export default function Home() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 outline-none">
+
         {!document ? (
           /* Initial Upload View */
           <div className="py-6 space-y-8">
@@ -329,6 +330,20 @@ export default function Home() {
         </div>
       )}
 
+      {/* Semantic Accessible Footer */}
+      <footer role="contentinfo" className="border-t border-slate-900 bg-slate-950/90 py-6 px-4 text-center text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>© 2026 LexClear — AI Legal Clarity for Non-Lawyers. All outputs are for informational purposes only.</p>
+          <div className="flex items-center gap-4 text-slate-400">
+            <span className="hover:text-emerald-400 transition-colors">Privacy First</span>
+            <span>•</span>
+            <span className="hover:text-emerald-400 transition-colors">Zero Retention</span>
+            <span>•</span>
+            <span className="hover:text-emerald-400 transition-colors">WCAG 2.1 Compliant</span>
+          </div>
+        </div>
+      </footer>
+
       {/* API Key Modal */}
       <ApiKeyModal
         isOpen={isApiKeyModalOpen}
@@ -338,3 +353,4 @@ export default function Home() {
     </div>
   );
 }
+
